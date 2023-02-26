@@ -1,38 +1,135 @@
-type addFn = (a: number, b: number) => number;
+//bentuk 1
+// type Admin = {
+//   name: string;
+//   privilages: string[];
+// };
 
-let add: addFn;
+// type Employee = {
+//   name: string;
+//   startDate: Date;
+// };
 
-add = (n1: number, n2: number) => {
-  return n1 + n2;
+// type ElevatedEmployee = Admin & Employee;
+
+// const expample1: ElevatedEmployee = {
+//   name: 'Kurao',
+//   privilages: ['Wibu'],
+//   startDate: new Date(),
+// };
+
+//bentuk 2
+interface Admin {
+  name: string;
+  privilages: string[];
+}
+
+interface Employee {
+  name: string;
+  startDate: Date;
+}
+
+interface ElevatedEmployee extends Employee, Admin {}
+
+const expample1: ElevatedEmployee = {
+  name: 'Kurao',
+  privilages: ['Wibu'],
+  startDate: new Date(),
 };
 
-interface Named {
-  readonly name?: string;
-  outputName?: string;
+type Combinable = string | number;
+type Numeric = number | boolean;
+
+type Universal = Combinable & Numeric;
+
+function addingNumber(a: Combinable, b: Combinable) {
+  if (typeof a === 'string' || typeof b === 'string') {
+    return a.toString() + b.toString();
+  }
+  return a + b;
+}
+console.log(addingNumber('1', '2'));
+
+type UnknownEmployee = Employee | Admin;
+
+function printEmployeeInformation(emp: UnknownEmployee) {
+  console.log('Name : ' + emp.name);
+
+  if ('privilages' in emp) {
+    console.log('Privilages : ' + emp.privilages);
+  }
+  if ('startDate' in emp) {
+    console.log('StartDate : ' + emp.startDate);
+  }
 }
 
-interface Greetable extends Named {
-  //readonly //private //public etc in class
-  greet(phrase: string): void;
+class Car {
+  drive() {
+    console.log('Driving.....');
+  }
 }
 
-class Person implements Greetable {
-  name?: string;
-  age = 30;
-
-  constructor(n?: string) {
-    if (n) this.name = n;
+class Truck {
+  drive() {
+    console.log('Driving a truck.....');
   }
 
-  greet(phrase: string): void {
-    console.log(phrase + ' ' + this.name);
+  loadCargo(amount: number) {
+    console.log('Loading cargo...' + amount);
   }
 }
 
-let user1: Greetable;
+type Vehicle = Car | Truck;
 
-user1 = new Person();
+const v1 = new Car();
+const v2 = new Truck();
 
-user1.greet('Woiiii ajg');
+function useVehicle(vehicle: Vehicle) {
+  vehicle.drive();
 
-console.log(user1);
+  if ('loadCargo' in vehicle) {
+    vehicle.loadCargo(1000);
+  }
+  if (vehicle instanceof Truck) {
+    vehicle.loadCargo(1000);
+  }
+}
+
+useVehicle(v1);
+useVehicle(v2);
+
+interface Bird {
+  type: 'bird';
+  flyingSpeed: number;
+}
+interface Horse {
+  type: 'horse';
+  runningSpeed: number;
+}
+
+type Animal = Bird | Horse;
+
+function moveAnimel(animal: Animal) {
+  let speed: number;
+  switch (animal.type) {
+    case 'bird':
+      speed = animal.flyingSpeed;
+      break;
+    case 'horse':
+      speed = animal.runningSpeed;
+      break;
+  }
+  console.log('Moving with speed: ' + speed);
+  console.log('🚀 ~ file: app.ts:122 ~ moveAnimel ~ speed:', speed);
+}
+moveAnimel({ type: 'bird', flyingSpeed: 20 });
+
+const paragraph = document.getElementById('message-output');
+//const userInputElement = <HTMLInputElement>document.getElementById('user-input')!;
+
+//const userInputElement = document.getElementById('user-input')! as HTMLInputElement;
+
+const userInputElement = document.getElementById('user-input');
+
+if (userInputElement) {
+  (userInputElement as HTMLInputElement).value = 'Hi there';
+}
