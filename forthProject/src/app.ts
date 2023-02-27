@@ -41,6 +41,8 @@ type Numeric = number | boolean;
 
 type Universal = Combinable & Numeric;
 
+function addingNumber(a: number, b: number): number;
+function addingNumber(a: string, b: string): string;
 function addingNumber(a: Combinable, b: Combinable) {
   if (typeof a === 'string' || typeof b === 'string') {
     return a.toString() + b.toString();
@@ -48,6 +50,21 @@ function addingNumber(a: Combinable, b: Combinable) {
   return a + b;
 }
 console.log(addingNumber('1', '2'));
+const resultFromAN = addingNumber(1, 5);
+const resultFromANv2 = addingNumber('Kurao', ' Hikari');
+resultFromANv2.split(' ');
+
+const fetchUserData = {
+  id: 'u1',
+  name: 'Max',
+  job: { title: 'CEO', description: 'My own company' },
+};
+
+console.log(fetchUserData?.job?.title);
+
+const userInput = undefined;
+const storedData = userInput ?? 'DEFAULT';
+console.log('🚀 ~ file: app.ts:67 ~ storedData:', storedData);
 
 type UnknownEmployee = Employee | Admin;
 
@@ -133,3 +150,12 @@ const userInputElement = document.getElementById('user-input');
 if (userInputElement) {
   (userInputElement as HTMLInputElement).value = 'Hi there';
 }
+
+interface ErrorContainer {
+  [prop: string]: string;
+}
+
+const errBag: ErrorContainer = {
+  email: 'not a valid email',
+  username: 'Must start with a capital character',
+};
