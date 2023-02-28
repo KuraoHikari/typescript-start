@@ -1,161 +1,66 @@
-//bentuk 1
-// type Admin = {
-//   name: string;
-//   privilages: string[];
-// };
+const names: Array<string | number> = [];
 
-// type Employee = {
-//   name: string;
-//   startDate: Date;
-// };
+const promise: Promise<string> = new Promise((resolve, _) => {
+  setTimeout(() => {
+    resolve('This is done');
+  }, 2000);
+});
 
-// type ElevatedEmployee = Admin & Employee;
+promise.then((data) => {
+  data.split(' ');
+});
 
-// const expample1: ElevatedEmployee = {
-//   name: 'Kurao',
-//   privilages: ['Wibu'],
-//   startDate: new Date(),
-// };
-
-//bentuk 2
-interface Admin {
-  name: string;
-  privilages: string[];
+function merge<T extends object, U extends object>(objA: T, objB: U) {
+  return Object.assign(objA, objB);
 }
 
-interface Employee {
-  name: string;
-  startDate: Date;
+const mergeObj = merge({ name: 'kurao' }, { hikari: 'yeay' });
+console.log(mergeObj.name);
+
+interface Lengthy {
+  length: number;
 }
 
-interface ElevatedEmployee extends Employee, Admin {}
-
-const expample1: ElevatedEmployee = {
-  name: 'Kurao',
-  privilages: ['Wibu'],
-  startDate: new Date(),
-};
-
-type Combinable = string | number;
-type Numeric = number | boolean;
-
-type Universal = Combinable & Numeric;
-
-function addingNumber(a: number, b: number): number;
-function addingNumber(a: string, b: string): string;
-function addingNumber(a: Combinable, b: Combinable) {
-  if (typeof a === 'string' || typeof b === 'string') {
-    return a.toString() + b.toString();
+function countAndDescribe<T extends Lengthy>(element: T): [T, string] {
+  let descriptionText = 'Got no value';
+  if (element.length === 1) {
+    descriptionText = 'Got 1 element.';
+  } else if (element.length > 1) {
+    descriptionText = 'Got ' + element.length + ' elements';
   }
-  return a + b;
+  return [element, descriptionText];
 }
-console.log(addingNumber('1', '2'));
-const resultFromAN = addingNumber(1, 5);
-const resultFromANv2 = addingNumber('Kurao', ' Hikari');
-resultFromANv2.split(' ');
 
-const fetchUserData = {
-  id: 'u1',
-  name: 'Max',
-  job: { title: 'CEO', description: 'My own company' },
-};
+console.log(countAndDescribe(['aaaa', ['skamslak']]));
 
-console.log(fetchUserData?.job?.title);
+function extractAndConvert<T extends object, U extends keyof T>(obj: T, key: U) {
+  return 'Value: ' + obj[key];
+}
+console.log('🚀 ~ file: app.ts:37 ~ extractAndConvert:', extractAndConvert({ name: 'kurao' }, 'name'));
 
-const userInput = undefined;
-const storedData = userInput ?? 'DEFAULT';
-console.log('🚀 ~ file: app.ts:67 ~ storedData:', storedData);
+class StorageData<T extends string | number | boolean> {
+  private data: T[] = [];
 
-type UnknownEmployee = Employee | Admin;
-
-function printEmployeeInformation(emp: UnknownEmployee) {
-  console.log('Name : ' + emp.name);
-
-  if ('privilages' in emp) {
-    console.log('Privilages : ' + emp.privilages);
+  addItem(item: T) {
+    this.data.push(item);
   }
-  if ('startDate' in emp) {
-    console.log('StartDate : ' + emp.startDate);
+
+  removeItem(item: T) {
+    if (this.data.indexOf(item) === -1) {
+      return;
+    }
+    this.data.splice(this.data.indexOf(item), 1);
+  }
+
+  getItems() {
+    return [...this.data];
   }
 }
 
-class Car {
-  drive() {
-    console.log('Driving.....');
-  }
-}
+const textStorage = new StorageData<string>();
+textStorage.addItem('Kurao');
+textStorage.addItem('Hikari');
+textStorage.removeItem('Kurao');
+console.log(textStorage.getItems());
 
-class Truck {
-  drive() {
-    console.log('Driving a truck.....');
-  }
-
-  loadCargo(amount: number) {
-    console.log('Loading cargo...' + amount);
-  }
-}
-
-type Vehicle = Car | Truck;
-
-const v1 = new Car();
-const v2 = new Truck();
-
-function useVehicle(vehicle: Vehicle) {
-  vehicle.drive();
-
-  if ('loadCargo' in vehicle) {
-    vehicle.loadCargo(1000);
-  }
-  if (vehicle instanceof Truck) {
-    vehicle.loadCargo(1000);
-  }
-}
-
-useVehicle(v1);
-useVehicle(v2);
-
-interface Bird {
-  type: 'bird';
-  flyingSpeed: number;
-}
-interface Horse {
-  type: 'horse';
-  runningSpeed: number;
-}
-
-type Animal = Bird | Horse;
-
-function moveAnimel(animal: Animal) {
-  let speed: number;
-  switch (animal.type) {
-    case 'bird':
-      speed = animal.flyingSpeed;
-      break;
-    case 'horse':
-      speed = animal.runningSpeed;
-      break;
-  }
-  console.log('Moving with speed: ' + speed);
-  console.log('🚀 ~ file: app.ts:122 ~ moveAnimel ~ speed:', speed);
-}
-moveAnimel({ type: 'bird', flyingSpeed: 20 });
-
-const paragraph = document.getElementById('message-output');
-//const userInputElement = <HTMLInputElement>document.getElementById('user-input')!;
-
-//const userInputElement = document.getElementById('user-input')! as HTMLInputElement;
-
-const userInputElement = document.getElementById('user-input');
-
-if (userInputElement) {
-  (userInputElement as HTMLInputElement).value = 'Hi there';
-}
-
-interface ErrorContainer {
-  [prop: string]: string;
-}
-
-const errBag: ErrorContainer = {
-  email: 'not a valid email',
-  username: 'Must start with a capital character',
-};
+const numberStorage = new StorageData<number>();
