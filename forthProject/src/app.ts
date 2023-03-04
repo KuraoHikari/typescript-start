@@ -64,3 +64,20 @@ textStorage.removeItem('Kurao');
 console.log(textStorage.getItems());
 
 const numberStorage = new StorageData<number>();
+
+interface CourseGoal {
+  title: string;
+  description: string;
+  compleUntil: Date;
+}
+
+function createCourseGoal(title: string, description: string, compleUntil: Date) {
+  let courseGoalObj: Partial<CourseGoal> = {};
+  courseGoalObj.title = title;
+  courseGoalObj.description = description;
+  courseGoalObj.compleUntil = compleUntil;
+  return courseGoalObj as CourseGoal;
+}
+
+const namesMe: Readonly<string[]> = ['Kurao', 'Hikari'];
+// namesMe.push('Indra');
