@@ -1,5 +1,9 @@
-import { createSlice, configureStore } from '@reduxjs/toolkit';
+import { createSlice, configureStore, PayloadAction } from '@reduxjs/toolkit';
 import { InitialState } from '../Types';
+import { getHomePageVideos } from './reducers/getHomePageVideos';
+import { getSearchPageVideos } from './reducers/getSearchPageVideos';
+import { getVideoDetails } from './reducers/getVideoDetails';
+import { getRecommendedVideos } from './reducers/getRecommendedVideos';
 const initialState: InitialState = {
   videos: [],
   currentPlaying: null,
@@ -12,8 +16,34 @@ const initialState: InitialState = {
 const YoutubeSlice = createSlice({
   name: 'youtubeApp',
   initialState,
-  reducers: {},
-  extraReducers: (builder) => {},
+  reducers: {
+    clearVideos: (state) => {
+      state.videos = [];
+      state.nextPageToken = null;
+    },
+    changeSearchTerm: (state, action: PayloadAction<string>) => {
+      state.searchTerm = action.payload;
+    },
+    clearSearchTerm: (state) => {
+      state.searchTerm = '';
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(getHomePageVideos.fulfilled, (state, action) => {
+      state.videos = action.payload.parsedData;
+      state.nextPageToken = action.payload.nextPageToken;
+    });
+    builder.addCase(getSearchPageVideos.fulfilled, (state, action) => {
+      state.videos = action.payload.parsedData;
+      state.nextPageToken = action.payload.nextPageToken;
+    });
+    builder.addCase(getVideoDetails.fulfilled, (state, action) => {
+      state.currentPlaying = action.payload;
+    });
+    builder.addCase(getRecommendedVideos.fulfilled, (state, action) => {
+      state.recommendedVideos = action.payload.parsedData;
+    });
+  },
 });
 
 export const store = configureStore({
