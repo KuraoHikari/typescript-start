@@ -1,7 +1,7 @@
 import Nav from './auth/Nav';
 import './globals.css';
 import { Roboto } from '@next/font/google';
-import QueryWrapper from './QueryWrapper';
+import QueryWrapper from './auth/QuerryWrapper';
 
 export const metadata = {
   title: 'Create Next App',
