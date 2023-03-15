@@ -16,21 +16,22 @@ export default function Home() {
     queryFn: allPosts,
     queryKey: ['posts'],
   });
-  console.log(data);
+  // console.log(data);
   if (error) return error;
   if (isLoading) return 'Loading.....';
   return (
     <main>
       <AddPost />
-      {data?.map((post) => (
-        <Post
-          key={post?.id}
-          comments={post.comments}
-          name={post?.user?.name}
-          avatar={post?.user?.image}
-          postTitle={post?.title}
-        />
-      ))}
+      {!isLoading &&
+        data?.map((post) => (
+          <Post
+            key={post?.id}
+            comments={post.comments}
+            name={post?.user?.name}
+            avatar={post?.user?.image}
+            postTitle={post?.title}
+          />
+        ))}
     </main>
   );
 }
