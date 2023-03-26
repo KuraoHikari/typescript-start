@@ -8,7 +8,11 @@ const LoginModal = () => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const onSubmit = useCallback(async () => {}, [email, password, loginModal]);
+  const onSubmit = useCallback(async () => {
+    setIsLoading(true);
+
+    loginModal.onClose();
+  }, [email, password, loginModal]);
 
   return <div></div>;
 };
