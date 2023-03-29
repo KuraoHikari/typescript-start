@@ -1,8 +1,10 @@
 import useLoginModal from '@/hooks/useLoginModal';
 import { useCallback, useState } from 'react';
+import { toast } from 'react-hot-toast';
 import Input from '../Input';
 import Modal from '../Modal';
 import useRegisterModal from '@/hooks/useRegisterModal';
+import { signIn } from 'next-auth/react';
 
 const LoginModal = () => {
   const loginModal = useLoginModal();
@@ -16,8 +18,15 @@ const LoginModal = () => {
     try {
       setIsLoading(true);
 
+      await signIn('credentials', {
+        email,
+        password,
+      });
+
+      toast.success('Logged in');
       loginModal.onClose();
     } catch (error) {
+      toast.error('Something went wrong');
       console.log('🚀 ~ file: LoginModal.tsx:18 ~ onSubmit ~ error:', error);
     } finally {
       setIsLoading(false);
