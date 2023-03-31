@@ -2,6 +2,8 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 import serverAuth from '@/libs/serverAuth';
 import prisma from '@/libs/prismadb';
+import { isBase64Image, isImageKit } from '@/utils/imageValidation';
+import imgKit from '@/utils/imageKit';
 
 export default async function handler(
   req: NextApiRequest,
@@ -14,10 +16,32 @@ export default async function handler(
   try {
     const { currentUser } = await serverAuth(req);
 
-    const { name, username, bio, profileImage, coverImage } = req.body;
+    let { name, username, bio, profileImage, coverImage } = req.body;
 
     if (!name || !username) {
       throw new Error('Missing fields');
+    }
+
+    if (coverImage && !isImageKit(coverImage)) {
+      const isValid = isBase64Image(coverImage);
+      if (!isValid) {
+        throw new Error('Missing fields');
+      }
+      const coverUpload = await imgKit(coverImage, `coverImage${username}`);
+      coverImage = coverUpload;
+    }
+
+    if (profileImage && !isImageKit(profileImage)) {
+      const isValid = isBase64Image(profileImage);
+      if (!isValid) {
+        throw new Error('Missing fields');
+      }
+
+      const profileUpload = await imgKit(
+        profileImage,
+        `profileImage${username}`
+      );
+      profileImage = profileUpload;
     }
 
     const updatedUser = await prisma.user.update({
