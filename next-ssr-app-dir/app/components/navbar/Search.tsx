@@ -31,7 +31,7 @@ const Search = () => {
                 px-6
         "
         >
-          posisi
+          anywhere
         </div>
         <div
           className="
@@ -45,7 +45,7 @@ const Search = () => {
         text-center
         "
         >
-          duration
+          Any Week
         </div>
         <div
           className="
