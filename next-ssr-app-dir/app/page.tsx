@@ -1,19 +1,22 @@
-import Image from 'next/image';
-import { Inter } from 'next/font/google';
-import styles from './page.module.css';
 import ClientOnly from './components/ClientOnly';
 import Container from './components/Container';
 import EmptyState from './components/EmptyState';
+import getListings, { IListingsParams } from './actions/getListings';
+import getCurrentUser from './actions/getCurrentUser';
+import ListingCard from './components/listings/ListingCard';
 
-const inter = Inter({ subsets: ['latin'] });
+interface HomeProps {
+  searchParams: IListingsParams;
+}
 
-export default function Home() {
-  const isEmpty = true;
+export default async function Home({ searchParams }: HomeProps) {
+  const listings = await getListings(searchParams);
+  const currentUser = await getCurrentUser();
 
-  if (isEmpty) {
+  if (listings.length === 0) {
     return (
       <ClientOnly>
-        <EmptyState />
+        <EmptyState showReset />
       </ClientOnly>
     );
   }
@@ -32,7 +35,15 @@ export default function Home() {
         2xl:grid-cols-6
         gap-8
         "
-        ></div>
+        >
+          {listings.map((listing: any) => (
+            <ListingCard
+              key={listing.id}
+              data={listing}
+              currentUser={currentUser}
+            />
+          ))}
+        </div>
       </Container>
     </ClientOnly>
   );
