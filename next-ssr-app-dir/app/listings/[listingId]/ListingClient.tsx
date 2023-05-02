@@ -10,9 +10,9 @@ import { SafeUser } from '@/app/types';
 import { SafeListing } from '@/app/types';
 import { SafeReservation } from '@/app/types';
 import axios from 'axios';
-import { eachDayOfInterval } from 'date-fns';
+import { differenceInDays, eachDayOfInterval } from 'date-fns';
 import { useRouter } from 'next/navigation';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Range } from 'react-date-range';
 import { toast } from 'react-hot-toast';
 
@@ -76,13 +76,25 @@ const ListingClient: React.FC<ListingClientProps> = ({
         setDateRange(initialDateRange);
         router.push('/trips');
       })
-      .catch(() => {
+      .catch((error: any) => {
+        console.log(error);
         toast.error('Something went wrong.');
       })
       .finally(() => {
         setIsLoading(false);
       });
   }, [totalPrice, dateRange, listing?.id, router, currentUser, loginModal]);
+  useEffect(() => {
+    if (dateRange.startDate && dateRange.endDate) {
+      const dayCount = differenceInDays(dateRange.endDate, dateRange.startDate);
+
+      if (dayCount && listing.price) {
+        setTotalPrice(dayCount * listing.price);
+      } else {
+        setTotalPrice(listing.price);
+      }
+    }
+  }, [dateRange, listing.price]);
   return (
     <Container>
       <div
