@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { BsGithub, BsGoogle } from "react-icons/bs";
 
@@ -8,12 +8,21 @@ import Button from "@/app/components/Button";
 import Input from "@/app/components/Input/Input";
 import AuthSocialButton from "./AuthSocialButton";
 import axios from "axios";
+import { toast } from "react-hot-toast";
+import { signIn, useSession } from "next-auth/react";
 
 type Variant = "LOGIN" | "REGISTER";
 
 const AuthForm = () => {
+ const session = useSession();
  const [variant, setVariant] = useState<Variant>("LOGIN");
  const [isLoading, setIsLoading] = useState(false);
+
+ useEffect(() => {
+  if (session?.status === "authenticated") {
+   console.log("masuk pak eko");
+  }
+ }, [session?.status]);
 
  const toggleVariant = useCallback(() => {
   if (variant === "LOGIN") {
@@ -39,14 +48,45 @@ const AuthForm = () => {
   setIsLoading(true);
 
   if (variant === "REGISTER") {
-   axios.post("/api/register", data);
+   axios
+    .post("/api/register", data)
+    .catch(() => toast.error("Something went wrong!"))
+    .finally(() => setIsLoading(false));
   }
 
   if (variant === "LOGIN") {
+   signIn("credentials", {
+    ...data,
+    redirect: false,
+   })
+    .then((callback) => {
+     if (callback?.error) {
+      toast.error("Invalid credentials!");
+     }
+
+     if (callback?.ok && !callback?.error) {
+      toast.success("Logged in!");
+     }
+    })
+    .finally(() => setIsLoading(false));
   }
  };
  const socialAction = (action: string) => {
   setIsLoading(true);
+
+  signIn(action, {
+   redirect: false,
+  })
+   .then((callback) => {
+    if (callback?.error) {
+     toast.error("Invalid credentials!");
+    }
+
+    if (callback?.ok && !callback?.error) {
+     toast.success("Logged in!");
+    }
+   })
+   .finally(() => setIsLoading(false));
  };
 
  return (
