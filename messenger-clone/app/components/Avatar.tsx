@@ -2,7 +2,7 @@
 
 import { User } from "@prisma/client";
 
-import useActiveList from "../hooks/useActiveLIst";
+import useActiveList from "../hooks/useActiveList";
 import Image from "next/image";
 import React from "react";
 
