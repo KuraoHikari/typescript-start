@@ -7,5 +7,5 @@ export default withAuth({
 });
 
 export const config = {
- mathcer: ["/users/:path*"],
+ mathcer: ["/users/:path*", "/conversations/:path*", "/users", "/conversations"],
 };
