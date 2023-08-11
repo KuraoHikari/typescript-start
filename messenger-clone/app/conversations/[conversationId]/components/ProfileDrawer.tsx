@@ -11,7 +11,6 @@ import useActiveList from "@/app/hooks/useActiveList";
 
 import Avatar from "@/app/components/Avatar";
 import AvatarGroup from "@/app/components/AvatarGroup";
-import Modal from "@/app/components/Modal/Modal";
 import ConfirmModal from "./ConfirmModal";
 
 interface ProfileDrawerProps {
