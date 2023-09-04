@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { redirect } from "next/navigation";
 import { ServerHeader } from "./server-header";
+import { ServerSearch } from "./server-search";
 
 interface ServerSidebarProps {
  serverId: string;
@@ -94,7 +95,48 @@ export const ServerSidebar = async ({
  "
   >
    <ServerHeader server={server} role={role} />
-   server side bar
+   <div className="mt-2">
+    <ServerSearch
+     data={[
+      {
+       label: "Text Channels",
+       type: "channel",
+       data: textChannels?.map((channel) => ({
+        id: channel.id,
+        name: channel.name,
+        icon: iconMap[channel.type],
+       })),
+      },
+      {
+       label: "Voice Channels",
+       type: "channel",
+       data: audioChannels?.map((channel) => ({
+        id: channel.id,
+        name: channel.name,
+        icon: iconMap[channel.type],
+       })),
+      },
+      {
+       label: "Video Channels",
+       type: "channel",
+       data: videoChannels?.map((channel) => ({
+        id: channel.id,
+        name: channel.name,
+        icon: iconMap[channel.type],
+       })),
+      },
+      {
+       label: "Members",
+       type: "member",
+       data: members?.map((member) => ({
+        id: member.id,
+        name: member.profile.name,
+        icon: roleIconMap[member.role],
+       })),
+      },
+     ]}
+    />
+   </div>
   </div>
  );
 };
